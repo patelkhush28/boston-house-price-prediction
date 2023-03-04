@@ -1,6 +1,6 @@
 import pickle 
 from flask import Flask,request,app,jsonify,url_for,render_template
-
+import json
 import numpy as np
 import pandas as pd
 
@@ -19,9 +19,12 @@ def predict_api():
     print(data)
     print(np.array(list(data.values())).reshape(1,-1))
     new_data=np.array(list(data.values())).reshape(1,-1)
+    new_data=pd.DataFrame(data=new_data,index=None,columns=None)
     output=logmodel.predict(new_data)
-    print(output[0])
-    return jsonify(output[0])
+    # json dumps converts the python object to json object (it cannot convert int to json object tahts why we have converted it into the string)
+    ans=json.dumps(str(output[0]))
+    print(ans)
+    return jsonify(ans)
 
 if __name__=='__main__':
     app.run(debug=True)
